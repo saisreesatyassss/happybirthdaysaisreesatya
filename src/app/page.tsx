@@ -123,12 +123,12 @@ export default function Component() {
 
   const images = [
     // '/6.jpg?height=300&width=400',
-    '/images/1.jpg ', 
-    '/images/2.jpg ', 
-    '/images/3.jpg ', 
-    '/images/4.jpg ', 
-    '/images/5.jpg ', 
-    '/images/6.jpg ', 
+    '/images/image1.jpg ', 
+    '/images/image2.jpg ', 
+    '/images/image3.jpg ', 
+    '/images/image4.jpg ', 
+    '/images/image5.jpg ', 
+    '/images/image6.jpg ', 
   ]
 
 
