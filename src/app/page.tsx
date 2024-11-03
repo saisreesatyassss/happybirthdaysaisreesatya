@@ -23,14 +23,31 @@ const imageVariants = {
     transition: { type: "spring", bounce: 0.4, duration: 0.8 }
   }
 }
-
+const getRandomColor = () => {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
 export default function Component() {
   const [isConfettiActive, setIsConfettiActive] = useState(false)
   const [activeEmoji, setActiveEmoji] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
   const emojis = ["🎉", "🎂", "🎁", "🎈", "🥳"]
+ // State for colors
+  const [backgroundColor, setBackgroundColor] = useState('');
+  const [nameColor, setNameColor] = useState('');
+  const [buttonColor, setButtonColor] = useState('');
 
+  useEffect(() => {
+    // Set colors when the component mounts
+    setBackgroundColor(getRandomColor());
+    setNameColor(getRandomColor());
+    setButtonColor(getRandomColor());
+  }, []);
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveEmoji((prev) => (prev + 1) % emojis.length)
@@ -105,20 +122,44 @@ export default function Component() {
   }
 
   const images = [
-    '/placeholder.svg?height=300&width=400',
-    '/placeholder.svg?height=300&width=400',
-    '/placeholder.svg?height=300&width=400',
-    '/placeholder.svg?height=300&width=400',
-    '/placeholder.svg?height=300&width=400',
-    '/placeholder.svg?height=300&width=400',
-    '/placeholder.svg?height=300&width=400',
-    '/placeholder.svg?height=300&width=400',
-    '/placeholder.svg?height=300&width=400'
+    // '/6.jpg?height=300&width=400',
+    '/images/1.jpg ', 
+    '/images/2.jpg ', 
+    '/images/3.jpg ', 
+    '/images/4.jpg ', 
+    '/images/5.jpg ', 
+    '/images/6.jpg ', 
   ]
+
+
+  const gradients = [
+    'bg-gradient-to-b from-[#E6F0FF] to-[#F0F4F8]',
+    'bg-gradient-to-b from-[#FFEFBA] to-[#FFFFFF]',
+    'bg-gradient-to-b from-[#FAD0C4] to-[#FFD1A4]',
+    'bg-gradient-to-b from-[#FFB2B2] to-[#FFEA89]',
+    'bg-gradient-to-b from-[#FF9A9E] to-[#fad0c4]'
+  ];
+    // State to manage the current gradient index
+  const [currentGradientIndex, setCurrentGradientIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentGradientIndex((prev) => (prev + 1) % gradients.length);
+    }, 3000); // Change color every 3 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#F0F4F8] text-[#1A202C] overflow-x-hidden">
-     <section className="h-screen flex flex-col items-center justify-center relative bg-gradient-to-b from-[#E6F0FF] to-[#F0F4F8]">
+
+
+
+
+
+ <section 
+      className={`h-screen flex flex-col items-center justify-center relative bg-gradient-to-b ${backgroundColor} to-[#F0F4F8]`}
+    >
       {/* Intro message with animation */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -127,8 +168,8 @@ export default function Component() {
         className="text-center mb-8"
       >
         <motion.h2 
-          className="text-3xl md:text-4xl font-bold text-[#E53E3E] mb-2"
-          style={{ fontFamily: "'Sail', cursive" }}
+          className="text-3xl md:text-4xl font-bold mb-2"
+          style={{ fontFamily: "'Sail', cursive", color: nameColor }}
         >
           Happy Birthday to Me!
         </motion.h2>
@@ -143,21 +184,17 @@ export default function Component() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1, ease: "easeOut" }}
         className="text-6xl md:text-8xl font-bold text-center mb-6"
-        style={{ fontFamily: "'Sail', cursive" }}
+        style={{ fontFamily: "'Sail', cursive", color: nameColor }}
       >
         Happy Birthday
         <br />
-        <span className="text-[#4299E1]">Satya!</span>
+        <span className="text-[#4299E1]">{`Satya!`}</span>
       </motion.h1>
 
       {/* Emoji Animation */}
       <AnimatePresence mode="wait">
         <motion.div
           key={activeEmoji}
-          variants={emojiVariants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
           className="text-7xl md:text-9xl mb-8"
         >
           {emojis[activeEmoji]}
@@ -172,13 +209,13 @@ export default function Component() {
       >
         <button
           onClick={() => setIsConfettiActive((prev) => !prev)}
-          className="bg-[#4299E1] text-white hover:bg-[#3182CE] font-bold py-3 px-6 rounded-full text-lg shadow-lg transition-all duration-300 transform hover:scale-105"
+          className={`bg-[#4299E1] text-white hover:bg-opacity-90 font-bold py-3 px-6 rounded-full text-lg shadow-lg transition-all duration-300 transform hover:scale-105`}
         >
           {isConfettiActive ? 'Stop' : 'Start'} Confetti!
         </button>
         <button
           onClick={togglePlay}
-          className="bg-[#48BB78] text-white hover:bg-[#38A169] font-bold py-3 px-6 rounded-full text-lg shadow-lg transition-all duration-300 transform hover:scale-105"
+          className={`bg-[#4299E1] text-white hover:bg-opacity-90 font-bold py-3 px-6 rounded-full text-lg shadow-lg transition-all duration-300 transform hover:scale-105`}
         >
           {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
         </button>
@@ -194,8 +231,9 @@ export default function Component() {
         <ChevronDown className="w-10 h-10 animate-bounce text-[#4299E1]" />
       </motion.div>
     </section>
-
+     
  
+
 
 
 
@@ -260,31 +298,32 @@ export default function Component() {
       </motion.div>
     </motion.div>
 
-    {/* Image Grid with "Wall of Wishes" */}
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-      {images.map((src, index) => (
-        <motion.div
-          key={index}
-          variants={imageVariants}
-          initial="offscreen"
-          whileInView="onscreen"
-          viewport={{ once: true, amount: 0.8 }}
-          className="relative h-[300px] rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300"
-        >
-          <Image
-            src={src}
-            alt={`Satya's Birthday Image ${index + 1}`}
-            layout="fill"
-            objectFit="cover"
-            className="transition-transform duration-300 hover:scale-110 hover:brightness-110"
-          />
-          {/* Optional caption for message snippets */}
-          <div className="absolute bottom-0 bg-black bg-opacity-50 text-white p-2 text-sm">
-            {`"Thanks for the amazing day!" -  ${index + 1}`}
-          </div>
-        </motion.div>
-      ))}
-    </div>
+   {/* Image Grid with "Wall of Wishes" */}
+<div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+  {images.map((src, index) => (
+    <motion.div
+      key={index}
+      variants={imageVariants}
+      initial="offscreen"
+      whileInView="onscreen"
+      viewport={{ once: true, amount: 0.8 }}
+      className="relative h-[300px] rounded-lg overflow-hidden shadow-lg transform hover:scale-105 transition duration-300"
+    >
+      <Image
+        src={src}
+        alt={`Satya's Birthday Image ${index + 1}`}
+        layout="fill"
+        objectFit="contain" // Change to contain to show full image
+        className="transition-transform duration-300 hover:scale-110 hover:brightness-110"
+      />
+      {/* Optional caption for message snippets */}
+      <div className="absolute bottom-0 bg-black bg-opacity-50 text-white p-2 text-sm">
+        {`"Thanks for the amazing day!" -  ${index + 1}`}
+      </div>
+    </motion.div>
+  ))}
+</div>
+
 
     {/* Send Thanks Button with Heartbeat Effect */}
     <motion.button
